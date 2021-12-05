@@ -1,0 +1,21 @@
+[Unit]
+Description=CRFA Prometheus HTTP Gateway
+After=multi-user.target
+
+[Service]
+User=cardano
+Group=cardano
+Type=simple
+Restart=always
+RestartSec=5
+LimitNOFILE=131072
+WorkingDirectory=/opt/crfa-prometheus-http-gateway
+ExecStart=ruby crfa-prometheus-http-gateway.rb http://localhost:9100 
+KillSignal=SIGINT
+SuccessExitStatus=0
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=crfa-prometheus-http-gateway
+
+[Install]
+WantedBy=multi-user.target
