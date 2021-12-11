@@ -41,8 +41,6 @@ server.mount_proc '/cardano-metrics' do |req, res|
 
     combined = node_response.body + "\n" + cardano_node_response.body
 
-    puts combined
-
     res.body = filterMetrics(combined)
 end
 
