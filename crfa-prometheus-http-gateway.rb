@@ -27,6 +27,11 @@ def filterMetrics(body)
 
             obj[:utxoSize] = split[1].strip
         end
+        if line.start_with?('cardano_node_metrics_delegMapSize_int')
+            split = line.gsub(/\s+/m, ' ').strip.split(" ")
+
+            obj[:delegMapSize] = split[1].strip
+        end
     }
 
     return obj.to_json
