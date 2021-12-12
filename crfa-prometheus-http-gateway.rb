@@ -32,6 +32,11 @@ def filterMetrics(body)
 
             obj[:delegMapSize] = split[1].strip
         end
+        if line.start_with?('cardano_node_metrics_forks_int')
+            split = line.gsub(/\s+/m, ' ').strip.split(" ")
+
+            obj[:chainForks] = split[1].strip
+        end
     }
 
     return obj.to_json
