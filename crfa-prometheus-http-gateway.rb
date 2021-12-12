@@ -5,13 +5,8 @@ require 'json'
 server = WEBrick::HTTPServer.new(:Port => 8082,
                              :SSLEnable => false)
 
-# node metrics                             
-node_host_port = ARGV[0]
-# cardano node metrics
-cardano_node_host_port = ARGV[1]
-
-puts "node_host_port:" + node_host_port
-puts "cardano_node_host_port:" + cardano_node_host_port
+puts "Configured urls:"
+ARGV.each { |url| puts url }
 
 def filterMetrics(body)
     obj = { }
@@ -27,19 +22,26 @@ def filterMetrics(body)
 
             obj[:chainDensity] = split[1].strip
         end
+        if line.start_with?('cardano_node_metrics_utxoSize_int')
+            split = line.gsub(/\s+/m, ' ').strip.split(" ")
+
+            obj[:utxoSize] = split[1].strip
+        end
     }
 
     return obj.to_json
 end
 
 server.mount_proc '/cardano-metrics' do |req, res|
-    node_url = "#{node_host_port}/metrics"
-    node_response = Faraday.get(node_url)
+    combined = ""
+    ARGV.each { |base_url| 
+        puts base_url
+        url = "#{base_url}/metrics"
+        response = Faraday.get(url)
+        body = response.body
 
-    cardano_node_url = "#{cardano_node_host_port}/metrics"
-    cardano_node_response = Faraday.get(cardano_node_url)
-
-    combined = node_response.body + "\n" + cardano_node_response.body
+        combined += body + "\n"
+    }
 
     res.body = filterMetrics(combined)
 end
