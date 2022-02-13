@@ -45,18 +45,26 @@ def filterMetrics(body)
     return obj.to_json
 end
 
-server.mount_proc '/cardano-metrics' do |req, res|
-    combined = ""
-    ARGV.each { |base_url| 
-        puts base_url
-        url = "#{base_url}/metrics"
-        response = Faraday.get(url)
-        body = response.body
+server.mount_proc '/' do |req, res|
+    res['Content-Type'] = 'application/json; charset=utf-8'
 
-        combined += body + "\n"
-    }
+    if req.path == '/cardano-metrics'
+        combined = ""
+        ARGV.each { |base_url|
+            puts base_url
+            url = "#{base_url}/metrics"
+            response = Faraday.get(url)
+            body = response.body
 
-    res.body = filterMetrics(combined)
+            combined += body + "\n"
+        }
+
+        res.status = 200
+        res.body = filterMetrics(combined)
+    else
+        res.status = 404
+        res.body = "Not Found!"
+    end
 end
 
 trap 'INT' do server.shutdown end
