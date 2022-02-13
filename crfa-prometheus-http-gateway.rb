@@ -2,8 +2,11 @@ require 'webrick'
 require 'faraday'
 require 'json'
 
-server = WEBrick::HTTPServer.new(:Port => 8082,
-                             :SSLEnable => false)
+server = WEBrick::HTTPServer.new(
+    :Port => 8082,
+    :SSLEnable => false,
+    :ServerSoftware => '¯\_(ツ)_/¯'
+)
 
 puts "Configured urls:"
 ARGV.each { |url| puts url }
