@@ -2,7 +2,7 @@ require 'webrick'
 require 'faraday'
 require 'json'
 
-server = WEBrick::HTTPServer.new(:Port => 8082,
+server = WEBrick::HTTPServer.new(:Port => 64000,
                              :SSLEnable => false,
                              :ServerSoftware => '')
 
