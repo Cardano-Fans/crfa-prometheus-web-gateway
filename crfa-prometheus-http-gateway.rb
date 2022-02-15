@@ -8,8 +8,8 @@ server = WEBrick::HTTPServer.new(
     :ServerSoftware => '¯\_(ツ)_/¯'
 )
 
-puts "Configured urls:"
-ARGV.each { |url| puts url }
+#puts "Configured urls:"
+#ARGV.each { |url| puts url }
 
 def filterMetrics(body)
     obj = { }
@@ -51,7 +51,7 @@ server.mount_proc '/' do |req, res|
     if req.path == '/cardano-metrics'
         combined = ""
         ARGV.each { |base_url|
-            puts base_url
+            #puts base_url
             url = "#{base_url}/metrics"
             response = Faraday.get(url)
             body = response.body
